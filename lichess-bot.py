@@ -10,24 +10,25 @@ if not os.path.exists(venv_path):
     print("Creando entorno virtual...")
     subprocess.run([sys.executable, "-m", "venv", venv_path])
 
-# Asegurar que usamos `python3` y `pip3` dentro del entorno virtual
-python_bin = os.path.join(venv_path, "bin", "python3")
+# Asegurar que estamos usando el `pip3` dentro del entorno virtual
 pip_bin = os.path.join(venv_path, "bin", "pip3")
 
-# Si `pip3` no existe, usar `pip`
+# Si no existe pip3 en el entorno virtual, vamos a instalarlo
 if not os.path.exists(pip_bin):
-    pip_bin = os.path.join(venv_path, "bin", "pip")
+    print("pip3 no encontrado, instalando pip...")
+    subprocess.run([sys.executable, "-m", "ensurepip", "--upgrade"])
 
-# Instalar paquetes dentro del venv si es necesario
+# Ahora instalamos 'chess' si no está instalado
 try:
     import chess
 except ModuleNotFoundError:
     print("Instalando módulo 'chess' con pip3...")
     subprocess.run([pip_bin, "install", "chess"])
-    import chess  # Volver a importar después de instalar
+    import chess  # Intentamos importar de nuevo después de instalar
 
 # Ahora ejecutamos el bot normalmente
 from lib.lichess_bot import start_program
+
 
 if __name__ == "__main__":
     start_program()
