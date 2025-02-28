@@ -10,23 +10,18 @@ if not os.path.exists(venv_path):
     print("Creando entorno virtual...")
     subprocess.run([sys.executable, "-m", "venv", venv_path])
 
-# Activar el entorno virtual
-activate_script = os.path.join(venv_path, "bin", "activate_this.py")
-if os.path.exists(activate_script):
-    exec(open(activate_script).read(), dict(__file__=activate_script))
-    print("Entorno virtual activado.")
+# Asegurar que usamos el Python del venv
+python_bin = os.path.join(venv_path, "bin", "python")
 
-# Asegurar que `chess` está instalado
+# Instalar paquetes dentro del venv si es necesario
 try:
     import chess
 except ModuleNotFoundError:
     print("Instalando módulo 'chess'...")
-    subprocess.run([f"{venv_path}/bin/pip", "install", "chess"])
+    subprocess.run([python_bin, "-m", "pip", "install", "chess"])
     import chess  # Volver a importar después de instalar
 
-# Ahora ejecutamos el bot normalmente
-from lib.lichess_bot import start_program
-
+# Ahora ejecutamos el bot
 
 from lib.lichess_bot import start_program
 
